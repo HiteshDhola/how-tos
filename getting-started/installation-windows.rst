@@ -93,17 +93,26 @@ Check everything is installed properly,
     
 Install EPICS
 -------------
+Get the required EPICS base source from epics-controls.org using `wget` and extract using `tar`. Below example shows the procedure for version 7.0.3.1. You can choose any EPICS base to install, procedure remains the same.
+
+Once you have extracted the archvie you will get a folder similar to `base-7.0.3.1`. We will rename that folder to `base`. You don't need to rename the folder, but it will make easy to navigate with short name and most of the standard documentation will refere root EPICS directory as `base`. This way you don't have to change `Environment variable` (explained in next section) whenever you start working on another version of EPICS.
 
 ::
 
     $ cd $HOME
     $ wget https://epics-controls.org/download/base/base-7.0.3.1.tar.gz
     $ tar -xvf base-7.0.3.1.tar.gz
-    $ cd base-7.0.3.1
+    $ mv base-7.0.3.1 base
+    
+Navigate to base directory. Set the EPICS_HOST_ARCH and run `make` command.
+
+::
+    
+    $ cd base
     $ export EPICS_HOST_ARCH=windows-x64-mingw
     $ make
 
-There should be lots of warnings, but no error. You can choose any EPICS base to install, procedure remains the same.
+You should get lots of warning, but No Error.
 
 EPICS in Msys environment
 ------------------------
@@ -112,7 +121,7 @@ Run ``softIoc`` and, if everything is ok, you should see an EPICS prompt. You ne
 
 ::
 
-    $ /home/'user'/base-7.0.3.1/bin/windows-x64-mingw/softIoc
+    $ /home/'user'/base/bin/windows-x64-mingw/softIoc
     epics>
 
 You can exit with ctrl-c or by typing exit.
@@ -128,7 +137,7 @@ Exit or minimise Msys2 environment. Open windows command prompt. Here 'user' is 
 
 ::
 
-    > cd c:\msys64\home\'user'\base-7.0.3.1\bin\windows-x64-mingw
+    > cd c:\msys64\home\'user'\base\bin\windows-x64-mingw
     > softIoc.exe -x test
         Starting iocInit
         ############################################################################
@@ -148,10 +157,10 @@ Go to Start Menu, Type "environment" and select ``Edit the system Environment Va
 
 1. Select ``Advance`` tab, navigate to ``Environment Variables`` button. That should open editable Tables of Path for Windows Environmet. 
 2. In ``User Variable for 'user'`` option, Press NEW
-3. Add EPICS BASE path here. In ``Variable Name``, Put "EPICS_BASE". In ``Variable Path``, put ``C:\msys64\home\'user'\base-7.0.3.1``
+3. Add EPICS BASE path here. In ``Variable Name``, Put "EPICS_BASE". In ``Variable Path``, put ``C:\msys64\home\'user'\base``
 4. One more variable to describe host architecture. In ``Variable Name``, put EPICS_HOST_ARCH. In ``Variable Value``, put "windows-x64-mingw"
 5. Now, Navigate to Variable called ``Path``. Press Edit. 
-6. To add new Path for EPICS commands, Press New again and put ``%EPICS_BASE%\bin\%EPICS_HOST_ARCH%``. Alternatively you can also put whole path as ``C:\msys64\home\'user'\base-7.0.3.1\bin\windows-x64-mingw`` Press ok two times and you are done.
+6. To add new Path for EPICS commands, Press New again and put ``%EPICS_BASE%\bin\%EPICS_HOST_ARCH%``. Alternatively you can also put whole path as ``C:\msys64\home\'user'\base\bin\windows-x64-mingw`` Press ok two times and you are done.
 7. Restart the Machine and check if ``caget`` and ``camonitor`` is being recognised as valid commands.
 
 This should finish setting up EPICS environment in your windows machine. Let's test if architecure is properly set,
@@ -177,7 +186,7 @@ Observe that output in Windows and Msys environment is "windows-x64-mingw".
 Simple Check for Process Variables
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Let's test some basic commands and simple Process variable in windows ``command prompt``. prepare a file ``test.db`` in ``C:\msys64\home\'user'\base-7.0.3.1\bin\windows-x64-mingw`` that reads like,
+Let's test some basic commands and simple Process variable in windows ``command prompt``. prepare a file ``test.db`` in ``C:\msys64\home\'user'\base\bin\windows-x64-mingw`` that reads like,
 
 ::
 
@@ -190,7 +199,7 @@ This file defines a record instance called ``temperature:water``, which is an an
 
 ::
 
-    > cd cd c:\msys64\home\'user'\base-7.0.3.1\bin\windows-x64-mingw
+    > cd c:\msys64\home\'user'\base\bin\windows-x64-mingw
     > softIoc -d test.db
     iocInit()
     Starting iocInit
@@ -258,7 +267,7 @@ We will need ``MSYS2`` for building ``ioc``. Open ``MSYS2 Mingw 64-bit``. Go to 
 
 ::
 
-    $ cd /home/'user'/base-7.0.3.1/
+    $ cd /home/'user'/base/
     $ mkdir testioc
     $ cd testioc
     
@@ -335,7 +344,7 @@ go to ioc root folder and run ``make``,
 
 ::
 
-    $ cd /base-7.0.3.1/testioc
+    $ cd /base/testioc
     $ export EPICS_HOST_ARCH=windows-x64-mingw
     $ make
 
@@ -355,16 +364,16 @@ from,
 ::
 
     epicsEnvSet("IOC","ioctest")
-    epicsEnvSet("TOP","/home/'user'/base-7.0.3.1/testioc")
-    epicsEnvSet("EPICS_BASE","/home/'user'/base-7.0.3.1/testioc/..")
+    epicsEnvSet("TOP","/home/'user'/base/testioc")
+    epicsEnvSet("EPICS_BASE","/home/'user'/base/testioc/..")
 
 to
 
 ::
 
     epicsEnvSet("IOC","ioctest")
-    epicsEnvSet("TOP","C:/msys64/home/'user'/base-7.0.3.1/testioc")
-    epicsEnvSet("EPICS_BASE","C:/msys64/home/'user'/base-7.0.3.1")
+    epicsEnvSet("TOP","C:/msys64/home/'user'/base/testioc")
+    epicsEnvSet("EPICS_BASE","C:/msys64/home/'user'/base")
 
 ``Note:Please pay attention to "back slash" here. Use linux style only for this part. It won't work otherwise``
 
@@ -374,24 +383,24 @@ go back to windows ``command prompt``,
 
 ::
 
-    > cd C:\msys64\home\'user'\base-7.0.3.1\testioc\iocBoot\ioctest
+    > cd C:\msys64\home\'user'\base\testioc\iocBoot\ioctest
     
-    > C:\msys64\home\'user'\base-7.0.3.1\testioc\iocBoot\ioctest>..\..\bin\windows-x64-mingw\test.exe st.cmd
+    > C:\msys64\home\'user'\base\testioc\iocBoot\ioctest>..\..\bin\windows-x64-mingw\test.exe st.cmd
     
     #!../../bin/windows-x64-mingw/test
     < envPaths
     epicsEnvSet("IOC","ioctest")
-    epicsEnvSet("TOP","C:/msys64/home/'user'/base-7.0.3.1/testioc")
-    epicsEnvSet("EPICS_BASE","C:/msys64/home/'user'/base-7.0.3.1")
-    cd "C:/msys64/home/'user'/base-7.0.3.1/testioc"
+    epicsEnvSet("TOP","C:/msys64/home/'user'/base/testioc")
+    epicsEnvSet("EPICS_BASE","C:/msys64/home/'user'/base")
+    cd "C:/msys64/home/'user'/base/testioc"
     ## Register all support components
     dbLoadDatabase "dbd/test.dbd"
     test_registerRecordDeviceDriver pdbbase
-    Warning: IOC is booting with TOP = "C:/msys64/home/'user'/base-7.0.3.1/testioc"
-              but was built with TOP = "/home/'user'/base-7.0.3.1/testioc"
+    Warning: IOC is booting with TOP = "C:/msys64/home/'user'/base/testioc"
+              but was built with TOP = "/home/'user'/base/testioc"
     ## Load record instances
     dbLoadRecords("db/test.db","user='user'")
-    cd "C:/msys64/home/'user'/base-7.0.3.1/testioc/iocBoot/ioctest"
+    cd "C:/msys64/home/'user'/base/testioc/iocBoot/ioctest"
     iocInit
     Starting iocInit
     ############################################################################
