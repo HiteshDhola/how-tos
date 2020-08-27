@@ -182,6 +182,14 @@ in Mysys2 ``bash``
 
 Observe that output in Windows and Msys environment is "windows-x64-mingw".
 
+::
+
+    Fun Fact : 
+    If you add "C:\msys64\usr\bin" also as a path in environment variables during Step 6. 
+    You can enjoy power of Linux Terminal on windows command prompt. 
+    Not all but lot of good basic Linux commands works very well.
+    You can use the tools installed in msys64 (like C++, Perl) directly from command prompt.
+
 
 Simple Check for Process Variables
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
